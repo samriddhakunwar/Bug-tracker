@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Issues – BugTracker</title>
+  <meta name="description" content="Browse, filter, search and manage all issues." />
+  <link rel="stylesheet" href="/css/site.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-brand" href="/dashboard.html">
+      <div class="brand-icon"><i class="fa-solid fa-bug"></i></div>
+      <span>BugTracker</span>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="/dashboard.html"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="/issues.html"><i class="fa-solid fa-list-check"></i> Issues</a>
+      <a href="/users.html" class="admin-only"><i class="fa-solid fa-users"></i> Users</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="sb-avatar">U</div>
+        <div>
+          <div class="user-name" id="sb-username">Loading…</div>
+          <div class="user-role" id="sb-role"></div>
+        </div>
+        <button class="btn-logout" onclick="Auth.logout()" title="Sign out">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <span class="topbar-title">Issues</span>
+      <div class="topbar-actions">
+        <button class="btn btn-primary btn-sm" id="btn-new-issue">
+          <i class="fa-solid fa-plus"></i> New Issue
+        </button>
+      </div>
+    </header>
+
+    <main class="page-body" style="padding:0;">
+      <!-- Filters -->
+      <div class="filters-bar">
+        <input id="filter-search" type="text" class="form-control" placeholder="Search title or description…" />
+        <select id="filter-status" class="form-select">
+          <option value="">All Statuses</option>
+          <option value="Open">Open</option>
+          <option value="InProgress">In Progress</option>
+          <option value="Resolved">Resolved</option>
+        </select>
+        <select id="filter-priority" class="form-select">
+          <option value="">All Priorities</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" id="btn-clear-filters">Clear</button>
+      </div>
+
+      <div id="alert-container" style="padding:12px 20px 0;"></div>
+
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Severity</th>
+              <th>Assigned To</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="issues-body">
+            <tr class="loading-row"><td colspan="8"><span class="spinner"></span> Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination" id="pagination-bar" style="display:none;"></div>
+    </main>
+  </div>
+</div>
+
+<!-- Create / Edit Issue Modal -->
+<div class="modal-overlay" id="issue-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">New Issue</span>
+      <button class="modal-close" id="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="modal-alert"></div>
+      <form id="issue-form" novalidate>
+        <input type="hidden" id="issue-id" />
+        <div class="form-group">
+          <label class="form-label" for="issue-title">Title <span style="color:var(--danger)">*</span></label>
+          <input id="issue-title" type="text" class="form-control" placeholder="Short, descriptive title" required maxlength="300" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="issue-description">Description</label>
+          <textarea id="issue-description" class="form-control" placeholder="Detailed description of the issue…" rows="4"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="issue-priority">Priority</label>
+            <select id="issue-priority" class="form-select">
+              <option value="0">Low</option>
+              <option value="1" selected>Medium</option>
+              <option value="2">High</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="issue-severity">Severity</label>
+            <select id="issue-severity" class="form-select">
+              <option value="0" selected>Minor</option>
+              <option value="1">Major</option>
+              <option value="2">Critical</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="issue-status">Status</label>
+            <select id="issue-status" class="form-select">
+              <option value="0">Open</option>
+              <option value="1">In Progress</option>
+              <option value="2">Resolved</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="issue-assigned">Assign To</label>
+            <select id="issue-assigned" class="form-select">
+              <option value="">Unassigned</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="modal-cancel">Cancel</button>
+      <button class="btn btn-primary" id="modal-save">Save Issue</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/issues.js"></script>
+</body>
+</html>

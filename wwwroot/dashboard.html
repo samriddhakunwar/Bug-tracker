@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – BugTracker</title>
+  <meta name="description" content="Overview of all issue statistics and recent activity." />
+  <link rel="stylesheet" href="/css/site.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-brand" href="/dashboard.html">
+      <div class="brand-icon"><i class="fa-solid fa-bug"></i></div>
+      <span>BugTracker</span>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="/dashboard.html"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="/issues.html"><i class="fa-solid fa-list-check"></i> Issues</a>
+      <a href="/users.html" class="admin-only"><i class="fa-solid fa-users"></i> Users</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="sb-avatar">U</div>
+        <div>
+          <div class="user-name" id="sb-username">Loading…</div>
+          <div class="user-role" id="sb-role"></div>
+        </div>
+        <button class="btn-logout" onclick="Auth.logout()" title="Sign out">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-content">
+    <header class="topbar">
+      <span class="topbar-title">Dashboard</span>
+      <div class="topbar-actions">
+        <a href="/issues.html" class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-plus"></i> New Issue
+        </a>
+      </div>
+    </header>
+
+    <main class="page-body">
+      <!-- Stats -->
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fa-solid fa-circle-dot"></i></div>
+          <div><div class="stat-value" id="stat-open">—</div><div class="stat-label">Open</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon amber"><i class="fa-solid fa-spinner"></i></div>
+          <div><div class="stat-value" id="stat-inprogress">—</div><div class="stat-label">In Progress</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div>
+          <div><div class="stat-value" id="stat-resolved">—</div><div class="stat-label">Resolved</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><i class="fa-solid fa-bug"></i></div>
+          <div><div class="stat-value" id="stat-total">—</div><div class="stat-label">Total Issues</div></div>
+        </div>
+      </div>
+
+      <!-- Recent Issues -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Recent Issues</span>
+          <a href="/issues.html" class="btn btn-secondary btn-sm">View all</a>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Assigned To</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody id="recent-issues-body">
+              <tr class="loading-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>

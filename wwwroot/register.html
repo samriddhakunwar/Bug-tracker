@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register – BugTracker</title>
+  <meta name="description" content="Create a BugTracker account to start tracking issues." />
+  <link rel="stylesheet" href="/css/site.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon"><i class="fa-solid fa-bug"></i></div>
+      <span class="auth-logo-text">BugTracker</span>
+    </div>
+    <h1 class="auth-title">Create account</h1>
+    <p class="auth-subtitle">Join your team on BugTracker</p>
+
+    <div id="alert-container"></div>
+
+    <form id="register-form" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="username">Username</label>
+        <input id="username" type="text" class="form-control" placeholder="johndoe" required autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email address</label>
+        <input id="email" type="email" class="form-control" placeholder="you@example.com" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">Password <span class="text-muted text-sm">(min 6 characters)</span></label>
+        <input id="password" type="password" class="form-control" placeholder="••••••••" required autocomplete="new-password" minlength="6" />
+      </div>
+      <button id="register-btn" type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:4px;">
+        Create account
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Already have an account? <a href="/login.html">Sign in</a>
+    </p>
+  </div>
+</div>
+<script src="/js/auth.js"></script>
+<script>
+  Auth.requireGuest();
+
+  document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearAlert('alert-container');
+    const username = document.getElementById('username').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (password.length < 6) {
+      showAlert('alert-container', 'Password must be at least 6 characters.');
+      return;
+    }
+
+    const btn = document.getElementById('register-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Creating account…';
+
+    try {
+      const res = await api.post('/auth/register', { username, email, password });
+      Auth.save(res.data);
+      window.location.href = '/dashboard.html';
+    } catch (err) {
+      showAlert('alert-container', err.message);
+      btn.disabled = false;
+      btn.innerHTML = 'Create account';
+    }
+  });
+</script>
+</body>
+</html>

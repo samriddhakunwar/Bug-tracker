@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Users – BugTracker</title>
+  <meta name="description" content="Manage user accounts (Admin only)." />
+  <link rel="stylesheet" href="/css/site.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-brand" href="/dashboard.html">
+      <div class="brand-icon"><i class="fa-solid fa-bug"></i></div>
+      <span>BugTracker</span>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="/dashboard.html"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <a href="/issues.html"><i class="fa-solid fa-list-check"></i> Issues</a>
+      <a href="/users.html" class="admin-only"><i class="fa-solid fa-users"></i> Users</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="sb-avatar">U</div>
+        <div>
+          <div class="user-name" id="sb-username">Loading…</div>
+          <div class="user-role" id="sb-role"></div>
+        </div>
+        <button class="btn-logout" onclick="Auth.logout()" title="Sign out">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <span class="topbar-title">User Management</span>
+    </header>
+
+    <main class="page-body">
+      <div id="alert-container"></div>
+      <div id="access-denied" style="display:none;" class="empty-state">
+        <i class="fa-solid fa-lock"></i>
+        <p>Access denied. Admin only.</p>
+      </div>
+
+      <div class="card" id="users-card">
+        <div class="card-header">
+          <span class="card-title">All Users</span>
+          <span class="text-muted text-sm" id="user-count"></span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="users-body">
+              <tr class="loading-row"><td colspan="7"><span class="spinner"></span> Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/users.js"></script>
+</body>
+</html>
