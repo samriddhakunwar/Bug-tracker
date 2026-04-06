@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: bugtracker-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_123
+      MYSQL_DATABASE: bugtracker_db
+      MYSQL_USER: bugtracker_user
+      MYSQL_PASSWORD: bugtracker_pass_123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - bugtracker-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-proot_password_123",
+        ]
+      timeout: 20s
+      retries: 10
+
+  # API Application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bugtracker-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=mysql;Port=3306;Database=bugtracker_db;User=root;Password=root_password_123;"
+      JwtSettings__SecretKey: "BugTracker_SuperSecretKey_ChangeInProduction_MinLength32Chars!"
+      JwtSettings__Issuer: "BugTrackerAPI"
+      JwtSettings__Audience: "BugTrackerClient"
+      JwtSettings__ExpiryHours: "24"
+    ports:
+      - "7123:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./wwwroot/uploads:/app/wwwroot/uploads
+    networks:
+      - bugtracker-network
+
+networks:
+  bugtracker-network:
+    driver: bridge
+
+volumes:
+  mysql_data:

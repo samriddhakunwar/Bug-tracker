@@ -99,11 +99,17 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// ─── Apply Migrations Automatically ─────────────────────────────────────────
+// ─── Apply Migrations & Seed Data ──────────────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
+
+    // Seed demo data (only if database is empty)
+    if (!db.Users.Any())
+    {
+        DbSeeder.SeedDatabase(db);
+    }
 }
 
 // ─── Middleware Pipeline ─────────────────────────────────────────────────────
